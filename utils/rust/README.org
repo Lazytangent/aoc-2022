@@ -2,21 +2,16 @@
 
 * Usage for data files
 
-In the Cargo project, create a =data= directory to store a =small.txt= and
+In the problem directory, create a =data= directory to store a =small.txt= and
 a =full.txt= for the sample and full data sets, respectively.
 
 #+BEGIN_SRC bash
 .
-├── Cargo.lock
-├── Cargo.toml
 ├── data
-│   ├── full.txt
-│   └── small.txt
-└── src
-    └── main.rs
+└── rust
 #+END_SRC
 
-** Using the util functions to read the data files
+** Using the util functions to read the data files in a Cargo/Rust project
 
 #+BEGIN_SRC rust
 use utils::{self, fs::DataType};
