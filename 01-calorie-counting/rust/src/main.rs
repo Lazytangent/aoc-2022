@@ -1,15 +1,7 @@
-use std::process;
-
-use utils;
+use utils::{self, fs::DataType};
 
 fn main() {
-    let contents = match utils::fs::read_real_data() {
-        Ok(f) => f,
-        Err(e) => {
-            eprintln!("Error: {e:#?}");
-            process::exit(1);
-        }
-    };
+    let contents = utils::fs::read_data(DataType::Real);
 
     let elves: Vec<String> = contents
         .split("\n\n")
