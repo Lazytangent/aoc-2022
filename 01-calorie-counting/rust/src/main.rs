@@ -1,10 +1,9 @@
-use std::{fs, io::Result, process};
+use std::process;
 
-const SAMPLE_DATA: &str = "data/small.txt";
-const REAL_DATA: &str = "data/full.txt";
+use utils;
 
 fn main() {
-    let contents = match read_file(REAL_DATA) {
+    let contents = match utils::fs::read_real_data() {
         Ok(f) => f,
         Err(e) => {
             eprintln!("Error: {e:#?}");
@@ -44,8 +43,4 @@ fn main() {
 
     let top_three = highest + second + third;
     println!("Second solution: {top_three}");
-}
-
-fn read_file(filename: &str) -> Result<String> {
-    fs::read_to_string(filename)
 }
