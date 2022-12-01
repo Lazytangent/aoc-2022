@@ -4,7 +4,7 @@ const SAMPLE_DATA: &str = "data/small.txt";
 const REAL_DATA: &str = "data/full.txt";
 
 fn main() {
-    let contents = match read_file(REAL_DATA) {
+    let contents = match read_file(SAMPLE_DATA) {
         Ok(f) => f,
         Err(e) => {
             eprintln!("Error: {e:#?}");
@@ -18,6 +18,7 @@ fn main() {
         .collect();
 
     let mut highest = 0;
+    let (mut second, mut third) = (0, 0);
 
     for elf in elves {
         let calories: usize = elf
@@ -27,10 +28,22 @@ fn main() {
             .reduce(|accum, item| accum + item)
             .unwrap();
 
-        highest = highest.max(calories);
+        if calories >= highest {
+            third = second;
+            second = highest;
+            highest = calories;
+        } else if calories >= second {
+            third = second;
+            second = calories;
+        } else if calories > third {
+            third = calories;
+        }
     }
 
     println!("First solution: {highest:#?}");
+
+    let top_three = highest + second + third;
+    println!("Second solution: {top_three}");
 }
 
 fn read_file(filename: &str) -> Result<String> {
