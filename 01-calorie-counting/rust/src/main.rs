@@ -4,7 +4,7 @@ const SAMPLE_DATA: &str = "data/small.txt";
 const REAL_DATA: &str = "data/full.txt";
 
 fn main() {
-    let contents = match read_file(SAMPLE_DATA) {
+    let contents = match read_file(REAL_DATA) {
         Ok(f) => f,
         Err(e) => {
             eprintln!("Error: {e:#?}");
