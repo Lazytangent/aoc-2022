@@ -1,2 +1,5 @@
 [workspace]
-members = ["01-calorie-counting/rust"]
+members = [
+  "01-calorie-counting/rust",
+  "utils/rust",
+]
