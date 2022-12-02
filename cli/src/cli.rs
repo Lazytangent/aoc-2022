@@ -1,5 +1,7 @@
 use clap::{Parser, Subcommand};
 
+use crate::{test, data};
+
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Cli {
@@ -9,11 +11,17 @@ struct Cli {
 
 #[derive(Subcommand, Debug)]
 enum Command {
+    /// Command for testing things out
     Test,
+    /// Get data set for a specific day
+    Data(data::Args),
 }
 
-pub fn run() {
+pub async fn run() {
     let cli = Cli::parse();
 
-    println!("{cli:#?}");
+    match cli.command {
+        Command::Test => test::run(),
+        Command::Data(args) => data::run(args).await,
+    };
 }

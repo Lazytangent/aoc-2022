@@ -1,5 +1,10 @@
+use dotenvy::dotenv;
+
 use cli::cli;
 
-fn main() {
-    cli::run();
+#[tokio::main]
+async fn main() {
+    dotenv().ok();
+
+    cli::run().await;
 }
