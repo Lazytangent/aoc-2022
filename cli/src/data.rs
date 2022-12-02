@@ -1,4 +1,4 @@
-use std::{env, process};
+use std::{env, process, fs};
 
 use reqwest::header::COOKIE;
 
@@ -34,5 +34,7 @@ pub async fn run(args: Args) {
         .await
         .unwrap();
 
-    println!("{body}");
+    fs::create_dir_all("data").unwrap();
+
+    fs::write("data/full.txt", body).unwrap();
 }
