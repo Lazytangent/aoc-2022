@@ -1,0 +1,5 @@
+#+title: CLI Helper
+
+In the process of working through the current set of Advent of Code problems for
+2022, I figured it would also be a good idea to build a custom CLI to fetch the
+data files for the problems.
