@@ -25,7 +25,7 @@ pub async fn run(args: Args) {
         }
     };
 
-    let body = client.get("https://adventofcode.com/20022/day/2/input")
+    let body = client.get("https://adventofcode.com/2022/day/2/input")
         .header(COOKIE, session_cookie)
         .send()
         .await
@@ -34,5 +34,5 @@ pub async fn run(args: Args) {
         .await
         .unwrap();
 
-    println!("{body:#?}");
+    println!("{body}");
 }
