@@ -3,11 +3,7 @@ use utils::{self, fs::DataType};
 fn main() {
     let contents = utils::fs::read_data(DataType::Real);
 
-    let rounds: Vec<String> = contents
-        .trim_end()
-        .split('\n')
-        .map(String::from)
-        .collect();
+    let rounds: Vec<String> = contents.trim_end().split('\n').map(String::from).collect();
 
     let mut score = 0;
 
@@ -16,33 +12,34 @@ fn main() {
 
         match strategy[1] {
             "X" => {
-                score += 1;
-
                 match strategy[0] {
                     "A" => score += 3,
-                    "C" => score += 6,
-                    _ => ()
+                    "B" => score += 1,
+                    "C" => score += 2,
+                    _ => (),
                 };
             }
             "Y" => {
-                score += 2;
-
-                match strategy[0] {
-                    "A" => score += 6,
-                    "B" => score += 3,
-                    _ => ()
-                };
-            }
-            "Z" => {
                 score += 3;
 
                 match strategy[0] {
-                    "B" => score += 6,
+                    "A" => score += 1,
+                    "B" => score += 2,
                     "C" => score += 3,
-                    _ => ()
+                    _ => (),
                 };
             }
-            _ => ()
+            "Z" => {
+                score += 6;
+
+                match strategy[0] {
+                    "A" => score += 2,
+                    "B" => score += 3,
+                    "C" => score += 1,
+                    _ => (),
+                };
+            }
+            _ => (),
         }
     }
 
