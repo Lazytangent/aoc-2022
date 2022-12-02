@@ -1,6 +1,6 @@
 use dotenvy::dotenv;
 
-use cli::cli;
+use aoc_cli::cli;
 
 #[tokio::main]
 async fn main() {
