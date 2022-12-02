@@ -43,5 +43,5 @@ fn main() {
         }
     }
 
-    println!("First solution: {score}");
+    println!("Second solution: {score}");
 }
