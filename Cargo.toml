@@ -1,6 +1,7 @@
 [workspace]
 members = [
   "01-calorie-counting/rust",
+  "02-rock-paper-scissors/rust",
   "utils/rust",
   "cli",
 ]
