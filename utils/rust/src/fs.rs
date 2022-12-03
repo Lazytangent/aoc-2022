@@ -1,4 +1,6 @@
-use std::{fs, io::Result, process};
+use std::{fmt, fs, io::Result, process};
+
+use clap::ValueEnum;
 
 use crate::constants::{REAL_DATA, SAMPLE_DATA};
 
@@ -14,11 +16,6 @@ pub fn read_real_data() -> Result<String> {
     read_file(REAL_DATA)
 }
 
-pub enum DataType {
-    Real,
-    Sample,
-}
-
 pub fn read_data(r#type: DataType) -> String {
     let func = match r#type {
         DataType::Real => read_real_data,
@@ -30,6 +27,21 @@ pub fn read_data(r#type: DataType) -> String {
         Err(e) => {
             eprintln!("Error: {e:#?}");
             process::exit(1);
+        }
+    }
+}
+
+#[derive(ValueEnum, Copy, Clone, Debug, PartialEq, Eq)]
+pub enum DataType {
+    Real,
+    Sample,
+}
+
+impl fmt::Display for DataType {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match *self {
+            DataType::Real => write!(f, "real"),
+            DataType::Sample => write!(f, "sample"),
         }
     }
 }
