@@ -29,6 +29,11 @@ pub async fn run(args: Args) {
     let now = chrono::offset::Local::now().date_naive();
     let mut day = now.day();
     let mut year = now.year();
+    let month = now.month();
+
+    if month != 12 {
+        year -= 1;
+    }
 
     if let Some(d) = args.day {
         day = d;
