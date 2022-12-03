@@ -39,9 +39,11 @@ pub enum DataType {
 
 impl fmt::Display for DataType {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match *self {
-            DataType::Real => write!(f, "real"),
-            DataType::Sample => write!(f, "sample"),
-        }
+        let content =match *self {
+            DataType::Real => "real",
+            DataType::Sample => "sample",
+        };
+
+        write!(f, "{}", content)
     }
 }
