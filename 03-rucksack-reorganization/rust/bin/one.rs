@@ -4,7 +4,6 @@ fn main() {
     let contents = utils::fs::read_data(DataType::Real);
 
     let rucksacks: Vec<String> = contents
-        .trim_end()
         .split('\n')
         .map(String::from)
         .collect();

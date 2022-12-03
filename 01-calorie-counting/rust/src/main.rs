@@ -13,7 +13,6 @@ fn main() {
 
     for elf in elves {
         let calories: usize = elf
-            .trim_end()
             .split('\n')
             .map(|s| str::parse(s).unwrap())
             .reduce(|accum, item| accum + item)

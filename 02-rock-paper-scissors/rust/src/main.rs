@@ -3,7 +3,7 @@ use utils::{self, fs::DataType};
 fn main() {
     let contents = utils::fs::read_data(DataType::Real);
 
-    let rounds: Vec<String> = contents.trim_end().split('\n').map(String::from).collect();
+    let rounds: Vec<String> = contents.split('\n').map(String::from).collect();
 
     let mut score = 0;
 
