@@ -21,3 +21,20 @@ use utils::{self, fs::DataType};
 let contents = utils::fs::read_data(DataType::Real);
 let contents = utils::fs::read_data(DataType::Sample);
 #+END_SRC
+
+* CLI Lib usage
+
+#+BEGIN_SRC rust
+use utils::{self, cli};
+
+use <package>::solve;
+
+fn main() {
+    let cli = cli::run();
+
+    solve(cli.r#type);
+}
+#+END_SRC
+
+In the example, it's expected that the library (=lib.rs=) file exports
+a =solve= function that accepts a =DataType= as an argument.
