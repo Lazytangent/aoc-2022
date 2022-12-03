@@ -8,6 +8,8 @@ a =full.txt= for the sample and full data sets, respectively.
 #+BEGIN_SRC bash
 .
 ├── data
+│   ├── full.txt
+│   └── small.txt
 └── rust
 #+END_SRC
 
