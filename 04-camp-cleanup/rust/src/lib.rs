@@ -57,5 +57,5 @@ pub fn solve(r#type: DataType) {
         }
     }
 
-    println!("Part one solution: {count}");
+    println!("Part two solution: {count}");
 }
