@@ -1,3 +1,9 @@
+use utils::cli;
+
+use cleanup::solve;
+
 fn main() {
-    println!("Hello, world!");
+    let cli_ = cli::run();
+
+    solve(cli_.r#type);
 }
