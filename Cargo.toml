@@ -4,7 +4,8 @@ members = [
   "02-rock-paper-scissors/rust",
   "03-rucksack-reorganization/rust",
   "04-camp-cleanup/rust",
-  "05/rust",
+  "05-supply-stacks/rust",
+  "06/rust",
   "utils/rust",
   "cli",
 ]
