@@ -47,7 +47,7 @@ pub fn solve(r#type: DataType) {
     }
 
     let last_items: String = stacks.into_iter().map(|mut s| s.pop().unwrap()).collect();
-    println!("Part one solution: {last_items}");
+    println!("Part two solution: {last_items}");
 }
 
 pub fn solve_one(r#type: DataType) {
