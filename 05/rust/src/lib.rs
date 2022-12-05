@@ -35,5 +35,12 @@ pub fn solve(r#type: DataType) {
         }
     }
 
-    println!("Stacks: {stacks:#?}");
+    for m in moves {
+        let m: Vec<String> = m.split_whitespace().map(String::from).collect();
+        let how_many: i32 = str::parse(&m[1]).unwrap();
+        let from: i32 = str::parse(&m[3]).unwrap();
+        let to: i32 = str::parse(&m[5]).unwrap();
+
+        println!("Moving {how_many} from {from} to {to}");
+    }
 }
