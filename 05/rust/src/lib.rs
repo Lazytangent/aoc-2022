@@ -37,10 +37,18 @@ pub fn solve(r#type: DataType) {
 
     for m in moves {
         let m: Vec<String> = m.split_whitespace().map(String::from).collect();
-        let how_many: i32 = str::parse(&m[1]).unwrap();
-        let from: i32 = str::parse(&m[3]).unwrap();
-        let to: i32 = str::parse(&m[5]).unwrap();
+        let how_many: usize = str::parse(&m[1]).unwrap();
+        let from: usize = str::parse(&m[3]).unwrap();
+        let to: usize = str::parse(&m[5]).unwrap();
 
-        println!("Moving {how_many} from {from} to {to}");
+        for _ in 0..how_many {
+            let last = stacks[from - 1].pop();
+            if let Some(v) = last {
+                stacks[to - 1].push(v);
+            }
+        }
     }
+
+    let last_items: String = stacks.into_iter().map(|mut s| s.pop().unwrap()).collect();
+    println!("Part one solution: {last_items}");
 }
