@@ -7,11 +7,7 @@ pub fn solve(r#type: DataType) {
 
     let mut idx = 14;
 
-    loop {
-        if idx > contents.len() {
-            break;
-        }
-
+    while idx > contents.len() {
         let prev = &contents[(idx - 14)..idx];
 
         if prev.len() != HashSet::<char>::from_iter(prev.chars()).len() {
@@ -30,11 +26,7 @@ pub fn solve_one(r#type: DataType) {
 
     let mut idx = 4;
 
-    loop {
-        if idx > contents.len() {
-            break;
-        }
-
+    while idx > contents.len() {
         let prev_three = &contents[(idx - 4)..idx];
 
         if prev_three.len() != HashSet::<char>::from_iter(prev_three.chars()).len() {
