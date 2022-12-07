@@ -40,12 +40,36 @@ pub fn solve(r#type: DataType) {
 
     let mut small_dirs: HashMap<String, u32> = HashMap::new();
 
-    for (dir, size) in dir_sizes {
-        if size < 100_000 {
-            small_dirs.insert(dir, size);
+    for (dir, size) in &dir_sizes {
+        if size < &100_000 {
+            small_dirs.insert(dir.clone(), *size);
         }
     }
 
     let sum_small_dirs: u32 = small_dirs.values().sum();
     println!("Part one solution: {sum_small_dirs}");
+
+    let total_disk_space: u32 = 70_000_000;
+    let required_free_space: u32 = 30_000_000;
+
+    let current_free_space = total_disk_space - dir_sizes["/"];
+    let required_change = required_free_space - current_free_space;
+
+    let mut eligible_dirs: HashMap<String, u32> = HashMap::new();
+
+    for (dir, size) in &dir_sizes {
+        if size >= &required_change {
+            eligible_dirs.insert(dir.clone(), *size);
+        }
+    }
+
+    let mut smallest_eligible_dir = "/".to_string();
+
+    for (dir, size) in &eligible_dirs {
+        if size < &eligible_dirs[&smallest_eligible_dir] {
+            smallest_eligible_dir = dir.clone();
+        }
+    }
+
+    println!("Part two solution: {}", eligible_dirs[&smallest_eligible_dir]);
 }
