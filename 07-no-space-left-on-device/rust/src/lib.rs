@@ -23,18 +23,19 @@ pub fn solve(r#type: DataType) {
                     parent_dirs.pop();
                 }
             }
-        } else {
-            match str::parse::<u32>(line[0]) {
-                Ok(v) => {
-                    let mut temp_parent_dirs = Vec::from(&parent_dirs[..]);
-                    while !temp_parent_dirs.is_empty() {
-                        let path = temp_parent_dirs.join("/");
-                        dir_sizes.entry(path).and_modify(|val| *val += v);
-                        temp_parent_dirs.pop();
-                    }
+            continue;
+        }
+
+        match str::parse::<u32>(line[0]) {
+            Ok(v) => {
+                let mut temp_parent_dirs = Vec::from(&parent_dirs[..]);
+                while !temp_parent_dirs.is_empty() {
+                    let path = temp_parent_dirs.join("/");
+                    dir_sizes.entry(path).and_modify(|val| *val += v);
+                    temp_parent_dirs.pop();
                 }
-                Err(_) => (),
             }
+            Err(_) => (),
         }
     }
 
@@ -71,5 +72,8 @@ pub fn solve(r#type: DataType) {
         }
     }
 
-    println!("Part two solution: {}", eligible_dirs[&smallest_eligible_dir]);
+    println!(
+        "Part two solution: {}",
+        eligible_dirs[&smallest_eligible_dir]
+    );
 }
