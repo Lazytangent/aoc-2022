@@ -19,7 +19,9 @@ pub fn solve(r#type: DataType) {
     let mut trees = Trees::new(matrix);
     trees.find_all_visible_trees();
 
-    println!("{}", trees.visible.len());
+    println!("Part one solution: {}", trees.visible.len());
+
+    println!("Part two solution: {}", trees.find_best_scenic_score());
 }
 
 #[derive(Debug)]
@@ -111,5 +113,85 @@ impl Trees {
             visible: HashSet::new(),
             matrix,
         }
+    }
+
+    fn see_up(&self, pos: (usize, usize)) -> usize {
+        let mut score = 0;
+        let val = self.matrix[pos.0][pos.1];
+        for row in (0..pos.0).rev() {
+            score += 1;
+            if val <= self.matrix[row][pos.1] {
+                break;
+            }
+        }
+
+        score
+    }
+
+    fn see_down(&self, pos: (usize, usize)) -> usize {
+        let mut score = 0;
+        let val = self.matrix[pos.0][pos.1];
+        let matrix_height = self.matrix.len();
+
+        for row in pos.0 + 1..matrix_height {
+            score += 1;
+            if val <= self.matrix[row][pos.1] {
+                break;
+            }
+        }
+
+        score
+    }
+
+    fn see_left(&self, pos: (usize, usize)) -> usize {
+        let mut score = 0;
+        let val = self.matrix[pos.0][pos.1];
+
+        for col in (0..pos.1).rev() {
+            score += 1;
+            if val <= self.matrix[pos.0][col] {
+                break;
+            }
+        }
+
+        score
+    }
+
+    fn see_right(&self, pos: (usize, usize)) -> usize {
+        let mut score = 0;
+        let val = self.matrix[pos.0][pos.1];
+        let matrix_width = self.matrix[0].len();
+
+        for col in (pos.1 + 1)..matrix_width {
+            score += 1;
+            if val <= self.matrix[pos.0][col] {
+                break;
+            }
+        }
+
+        score
+    }
+
+    fn get_scenic_score(&self, pos: (usize, usize)) -> usize {
+        let top = self.see_up(pos);
+        let bottom = self.see_down(pos);
+        let left = self.see_left(pos);
+        let right = self.see_right(pos);
+
+        top * bottom * left * right
+    }
+
+    pub fn find_best_scenic_score(&self) -> usize {
+        let mut max_score = 0;
+        for row in 0..self.matrix.len() {
+            for col in 0..self.matrix[0].len() {
+                let rating = self.get_scenic_score((row, col));
+                if rating > max_score {
+                    max_score = rating;
+                }
+            }
+        }
+
+        max_score
     }
 }
