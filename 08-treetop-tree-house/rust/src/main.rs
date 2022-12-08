@@ -1,6 +1,6 @@
 use utils;
 
-use PACKAGE::solve;
+use eighth::solve;
 
 fn main() {
     let cli = utils::cli::run();
