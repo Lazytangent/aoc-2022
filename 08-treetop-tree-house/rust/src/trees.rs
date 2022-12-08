@@ -8,23 +8,19 @@ pub struct Trees {
 
 impl Trees {
     fn visible_top(&mut self) {
-        let mut set = self.visible.clone();
         for col in 0..self.matrix[0].len() {
             let mut tallest = 0;
             for row in 0..self.matrix.len() {
                 let h = self.matrix[row][col];
                 if h > tallest || row == 0 {
                     tallest = h;
-                    set.insert((row, col));
+                    self.visible.insert((row, col));
                 }
             }
         }
-
-        self.visible = set;
     }
 
     fn visible_bottom(&mut self) {
-        let mut set = self.visible.clone();
         let matrix_height = self.matrix.len();
 
         for col in 0..self.matrix[0].len() {
@@ -33,16 +29,13 @@ impl Trees {
                 let h = self.matrix[row][col];
                 if h > tallest || row == matrix_height - 1 {
                     tallest = h;
-                    set.insert((row, col));
+                    self.visible.insert((row, col));
                 }
             }
         }
-
-        self.visible = set;
     }
 
     fn visible_right(&mut self) {
-        let mut set = self.visible.clone();
         let matrix_width = self.matrix[0].len();
 
         for row in 0..self.matrix.len() {
@@ -51,16 +44,13 @@ impl Trees {
                 let h = self.matrix[row][col];
                 if h > tallest || col == matrix_width - 1 {
                     tallest = h;
-                    set.insert((row, col));
+                    self.visible.insert((row, col));
                 }
             }
         }
-
-        self.visible = set;
     }
 
     fn visible_left(&mut self) {
-        let mut set = self.visible.clone();
         let matrix_width = self.matrix[0].len();
 
         for row in 0..self.matrix.len() {
@@ -69,12 +59,10 @@ impl Trees {
                 let h = self.matrix[row][col];
                 if h > tallest || col == 0 {
                     tallest = h;
-                    set.insert((row, col));
+                    self.visible.insert((row, col));
                 }
             }
         }
-
-        self.visible = set;
     }
 
     pub fn find_all_visible_trees(&mut self) {
