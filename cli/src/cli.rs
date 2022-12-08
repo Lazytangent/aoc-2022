@@ -1,6 +1,6 @@
 use clap::{Parser, Subcommand};
 
-use crate::{test, data};
+use crate::{test, data, skeleton};
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -15,6 +15,8 @@ enum Command {
     Test,
     /// Get data set for a specific day
     Data(data::Args),
+    /// For working with skeletons...
+    Skeleton(skeleton::Args),
 }
 
 pub async fn run() {
@@ -23,5 +25,6 @@ pub async fn run() {
     match cli.command {
         Command::Test => test::run(),
         Command::Data(args) => data::run(args).await,
+        Command::Skeleton(args) => skeleton::run(args).await,
     };
 }
