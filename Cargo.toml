@@ -8,6 +8,7 @@ members = [
   "06-tuning-trouble/rust",
   "07-no-space-left-on-device/rust",
   "08-treetop-tree-house/rust",
+  "09/rust",
   "utils/rust",
   "cli",
 ]
