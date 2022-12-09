@@ -65,24 +65,10 @@ pub fn solve(r#type: DataType) {
     solver(contents);
 }
 
-pub fn solve_one(r#type: DataType) {
-    let contents = utils::fs::read_data(r#type);
-
+pub fn solver_one(contents: String) {
     let mut visited: HashSet<(i32, i32)> = HashSet::from([(0, 0)]);
     let mut head = (0, 0);
     let mut tail = head;
-
-    let adjacent = [
-        (0, -1),
-        (0, 1),
-        (1, 0),
-        (-1, 0),
-        (1, -1),
-        (-1, -1),
-        (1, 1),
-        (-1, 1),
-        (0, 0),
-    ];
 
     let instructions: Vec<String> = contents.split('\n').map(String::from).collect();
 
@@ -92,36 +78,29 @@ pub fn solve_one(r#type: DataType) {
         let amount = str::parse::<u32>(line[1]).unwrap();
 
         for _ in 0..amount {
-            let prev = head;
-            let mut move_tail = true;
-
-            match direction {
-                "U" => {
-                    head = (head.0, head.1 + 1);
-                }
-                "D" => {
-                    head = (head.0, head.1 - 1);
-                }
-                "L" => {
-                    head = (head.0 - 1, head.1);
-                }
-                "R" => {
-                    head = (head.0 + 1, head.1);
-                }
-                _ => (),
+            let dir = match direction {
+                "U" => (0, 1),
+                "D" => (0, -1),
+                "L" => (-1, 0),
+                "R" => (1, 0),
+                _ => unreachable!(),
             };
 
-            for dir in adjacent {
-                let location = (tail.0 + dir.0, tail.1 + dir.1);
+            head = (dir.0 + head.0, dir.1 + head.1);
 
-                if location == head {
-                    move_tail = false;
-                    break;
+            let (x_diff, y_diff): (i32, i32) = (head.0 - tail.0, head.1 - tail.1);
+            if x_diff.abs() > 1 || y_diff.abs() > 1 {
+                if tail.0 != head.0 && tail.1 != head.1 {
+                    tail = (
+                        tail.0 + x_diff / x_diff.abs(),
+                        tail.1 + y_diff / y_diff.abs(),
+                    );
+                } else if x_diff.abs() > 1 {
+                    tail = (tail.0 + x_diff / x_diff.abs(), tail.1);
+                } else {
+                    tail = (tail.0, tail.1 + y_diff / y_diff.abs());
                 }
-            }
 
-            if move_tail {
-                tail = prev;
                 visited.insert(tail);
             }
         }
