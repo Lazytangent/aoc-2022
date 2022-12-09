@@ -9,6 +9,7 @@ members = [
   "07-no-space-left-on-device/rust",
   "08-treetop-tree-house/rust",
   "09-rope-bridge/rust",
+  "10/rust",
   "utils/rust",
   "cli",
 ]
