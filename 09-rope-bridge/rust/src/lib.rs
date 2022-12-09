@@ -17,20 +17,6 @@ pub fn solver(contents: String) {
         (0, 0),
     ];
 
-    let adjacent = [
-        (0, -1),
-        (0, 1),
-        (1, 0),
-        (-1, 0),
-        (1, -1),
-        (-1, -1),
-        (1, 1),
-        (-1, 1),
-        (0, 0),
-    ];
-
-    let mut insertions = vec![];
-
     let instructions: Vec<String> = contents.split('\n').map(String::from).collect();
 
     for line in instructions {
@@ -39,53 +25,36 @@ pub fn solver(contents: String) {
         let amount = str::parse::<u32>(line[1]).unwrap();
 
         for _ in 0..amount {
-            let mut prev = rope[0];
-
-            match direction {
-                "U" => {
-                    rope[0] = (rope[0].0, rope[0].1 + 1);
-                }
-                "D" => {
-                    rope[0] = (rope[0].0, rope[0].1 - 1);
-                }
-                "L" => {
-                    rope[0] = (rope[0].0 - 1, rope[0].1);
-                }
-                "R" => {
-                    rope[0] = (rope[0].0 + 1, rope[0].1);
-                }
-                _ => ()
+            let dir = match direction {
+                "U" => (0, 1),
+                "D" => (0, -1),
+                "L" => (-1, 0),
+                "R" => (1, 0),
+                _ => unreachable!(),
             };
+            rope[0] = (dir.0 + rope[0].0, dir.1 + rope[0].1);
 
             for idx in 1..rope.len() {
-                let mut move_node = true;
-                let node = rope[idx];
-
-                for dir in adjacent {
-                    let location = (node.0 + dir.0, node.1 + dir.1);
-
-                    if location == rope[idx - 1] {
-                        move_node = false;
-                        break;
+                let head = rope[idx - 1];
+                let tail = &mut rope[idx];
+                let (x_diff, y_diff): (i32, i32) = (head.0 - tail.0, head.1 - tail.1);
+                if x_diff.abs() > 1 || y_diff.abs() > 1 {
+                    if tail.0 != head.0 && tail.1 != head.1 {
+                        *tail = (
+                            tail.0 + x_diff / x_diff.abs(),
+                            tail.1 + y_diff / y_diff.abs(),
+                        );
+                    } else if x_diff.abs() > 1 {
+                        *tail = (tail.0 + x_diff / x_diff.abs(), tail.1);
+                    } else {
+                        *tail = (tail.0, tail.1 + y_diff / y_diff.abs());
                     }
-                }
-
-                if move_node {
-                    rope[idx] = prev;
-
-                    prev = node;
-                    if idx == 9 {
-                        visited.insert(rope[idx]);
-                        insertions.push(rope[idx]);
-                    }
-                } else {
-                    break;
                 }
             }
+
+            visited.insert(rope[9]);
         }
     }
-
-    println!("Insertions in order: {insertions:#?}");
 
     println!("Part two solution: {}", visited.len());
 }
@@ -139,7 +108,7 @@ pub fn solve_one(r#type: DataType) {
                 "R" => {
                     head = (head.0 + 1, head.1);
                 }
-                _ => ()
+                _ => (),
             };
 
             for dir in adjacent {
@@ -159,26 +128,4 @@ pub fn solve_one(r#type: DataType) {
     }
 
     println!("Part one solution: {}", visited.len());
-}
-
-#[cfg(test)]
-mod tests {
-    use super::solver;
-
-    const SAMPLE_TWO: &str = "R 5
-U 8
-L 8
-D 3
-R 17
-D 10
-L 25
-U 20
-";
-
-    #[test]
-    fn test_sample_input_two() {
-        let contents = SAMPLE_TWO.to_string();
-
-        solver(contents);
-    }
 }
