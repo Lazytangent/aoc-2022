@@ -4,18 +4,7 @@ use utils::{self, fs::DataType};
 
 pub fn solver(contents: String) {
     let mut visited: HashSet<(i32, i32)> = HashSet::from([(0, 0)]);
-    let mut rope = vec![
-        (0, 0),
-        (0, 0),
-        (0, 0),
-        (0, 0),
-        (0, 0),
-        (0, 0),
-        (0, 0),
-        (0, 0),
-        (0, 0),
-        (0, 0),
-    ];
+    let mut rope = vec![(0, 0); 10];
 
     let instructions: Vec<String> = contents.split('\n').map(String::from).collect();
 
