@@ -10,6 +10,7 @@ members = [
   "08-treetop-tree-house/rust",
   "09-rope-bridge/rust",
   "10-cathods-ray-tube/rust",
+  "11/rust",
   "utils/rust",
   "cli",
 ]
