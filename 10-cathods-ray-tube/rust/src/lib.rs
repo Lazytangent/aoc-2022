@@ -74,6 +74,7 @@ pub fn part_two(contents: String) {
         col += 1;
     }
 
+    println!("Part two solution:");
     print_screen(&screen);
 }
 
