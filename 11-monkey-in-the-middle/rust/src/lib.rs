@@ -5,11 +5,13 @@ use utils::{self, fs::DataType};
 pub fn solve(r#type: DataType, part: u8) {
     let contents = utils::fs::read_data(r#type);
 
-    match part {
-        1 => part_one(contents),
-        2 => part_two(contents),
+    let val = match part {
+        1 => part_one(&contents),
+        2 => part_two(&contents),
         _ => unreachable!(),
     };
+
+    println!("Part {part} solution: {val}");
 }
 
 #[derive(Debug, Clone)]
@@ -32,7 +34,7 @@ enum OtherValue {
     Int(usize),
 }
 
-pub fn part_one(contents: String) {
+pub fn part_one(contents: &str) -> usize {
     let monkey_instructions: Vec<String> = contents.split("\n\n").map(String::from).collect();
     let mut monkeys: Vec<Monkey> = Vec::with_capacity(monkey_instructions.len());
     let mut items: Vec<Vec<usize>> = vec![vec![]; monkey_instructions.len()];
@@ -111,10 +113,10 @@ pub fn part_one(contents: String) {
 
     monkeys.sort_by_key(|a| Reverse(a.items_seen));
 
-    println!("Part one solution: {}", monkeys[0].items_seen * monkeys[1].items_seen);
+    monkeys[0].items_seen * monkeys[1].items_seen
 }
 
-pub fn part_two(contents: String) {
+pub fn part_two(contents: &str) -> usize {
     let monkey_instructions: Vec<String> = contents.split("\n\n").map(String::from).collect();
     let mut monkeys: Vec<Monkey> = Vec::with_capacity(monkey_instructions.len());
     let mut items: Vec<Vec<usize>> = vec![vec![]; monkey_instructions.len()];
@@ -195,5 +197,54 @@ pub fn part_two(contents: String) {
 
     monkeys.sort_by_key(|a| Reverse(a.items_seen));
 
-    println!("Part two solution: {}", monkeys[0].items_seen * monkeys[1].items_seen);
+    monkeys[0].items_seen * monkeys[1].items_seen
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{part_one, part_two};
+
+    const INPUT: &str = "Monkey 0:
+  Starting items: 79, 98
+  Operation: new = old * 19
+  Test: divisible by 23
+    If true: throw to monkey 2
+    If false: throw to monkey 3
+
+Monkey 1:
+  Starting items: 54, 65, 75, 74
+  Operation: new = old + 6
+  Test: divisible by 19
+    If true: throw to monkey 2
+    If false: throw to monkey 0
+
+Monkey 2:
+  Starting items: 79, 60, 97
+  Operation: new = old * old
+  Test: divisible by 13
+    If true: throw to monkey 1
+    If false: throw to monkey 3
+
+Monkey 3:
+  Starting items: 74
+  Operation: new = old + 3
+  Test: divisible by 17
+    If true: throw to monkey 0
+    If false: throw to monkey 1";
+
+    #[test]
+    fn part_one_works() {
+        let expected = 10605;
+        let actual = part_one(INPUT);
+
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn part_two_works() {
+        let expected = 2713310158;
+        let actual = part_two(INPUT);
+
+        assert_eq!(actual, expected);
+    }
 }
