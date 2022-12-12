@@ -4,7 +4,12 @@ use utils::fs::DataType;
 
 pub fn solve(r#type: DataType) {
     let contents = utils::fs::read_data(r#type);
+    let sum = part_two(&contents);
 
+    println!("Second solution: {sum}");
+}
+
+pub fn part_two(contents: &str) -> usize {
     let rucksacks: Vec<String> = contents.split('\n').map(String::from).collect();
 
     let mut sum = 0;
@@ -27,12 +32,10 @@ pub fn solve(r#type: DataType) {
         }
     }
 
-    println!("Second solution: {sum}");
+    sum
 }
 
-pub fn solve_one(r#type: DataType) {
-    let contents = utils::fs::read_data(r#type);
-
+pub fn part_one(contents: &str) -> usize {
     let rucksacks: Vec<String> = contents.split('\n').map(String::from).collect();
 
     let mut sum = 0;
@@ -52,5 +55,40 @@ pub fn solve_one(r#type: DataType) {
         }
     }
 
+    sum
+}
+
+pub fn solve_one(r#type: DataType) {
+    let contents = utils::fs::read_data(r#type);
+    let sum = part_one(&contents);
+
     println!("First solution: {sum}");
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{part_one, part_two};
+
+    const INPUT: &str = "vJrwpWtwJgWrhcsFMMfFFhFp
+jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
+PmmdzqPrVvPwwTWBwg
+wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
+ttgJtRGJQctTZtZT
+CrZsJsPPZsGzwwsLwLmpwMDw";
+
+    #[test]
+    fn part_one_works() {
+        let expected = 157;
+        let actual = part_one(INPUT);
+
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn part_two_works() {
+        let expected = 70;
+        let actual = part_two(INPUT);
+
+        assert_eq!(actual, expected);
+    }
 }
