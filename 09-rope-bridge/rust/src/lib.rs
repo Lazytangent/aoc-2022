@@ -2,7 +2,7 @@ use std::collections::HashSet;
 
 use utils::{self, fs::DataType};
 
-pub fn solver(contents: String) {
+pub fn solver(contents: &str) -> usize {
     let mut visited: HashSet<(i32, i32)> = HashSet::from([(0, 0)]);
     let mut rope = vec![(0, 0); 10];
 
@@ -45,16 +45,20 @@ pub fn solver(contents: String) {
         }
     }
 
-    println!("Part two solution: {}", visited.len());
+    let ans = visited.len();
+
+    println!("Part two solution: {}", ans);
+
+    ans
 }
 
 pub fn solve(r#type: DataType) {
     let contents = utils::fs::read_data(r#type);
 
-    solver(contents);
+    solver(&contents);
 }
 
-pub fn solver_one(contents: String) {
+pub fn solver_one(contents: &str) -> usize {
     let mut visited: HashSet<(i32, i32)> = HashSet::from([(0, 0)]);
     let mut head = (0, 0);
     let mut tail = head;
@@ -95,5 +99,56 @@ pub fn solver_one(contents: String) {
         }
     }
 
-    println!("Part one solution: {}", visited.len());
+    let ans = visited.len();
+
+    println!("Part one solution: {}", ans);
+
+    ans
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{solver_one, solver};
+
+    const INPUT: &str = "R 4
+U 4
+L 3
+D 1
+R 4
+D 1
+L 5
+R 2";
+
+    #[test]
+    fn part_one_works() {
+        let expected = 13;
+        let actual = solver_one(INPUT);
+
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn part_two_works() {
+        let expected = 1;
+        let actual = solver(INPUT);
+
+        assert_eq!(actual, expected);
+    }
+
+    const INPUT_TWO: &str = "R 5
+U 8
+L 8
+D 3
+R 17
+D 10
+L 25
+U 20";
+
+    #[test]
+    fn part_two_example_two() {
+        let expected = 36;
+        let actual = solver(INPUT_TWO);
+
+        assert_eq!(actual, expected);
+    }
 }
