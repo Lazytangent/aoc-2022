@@ -81,14 +81,90 @@ pub fn part_one(contents: String) {
         }
     }
 
-    println!("{:#?}", distances[end.0][end.1]);
+    println!("Part one solution: {}", distances[end.0][end.1]);
 }
 
-const OFFSETS: [(i32, i32); 4] = [
-    (0, 1),
-    (0, -1),
-    (1, 0),
-    (-1, 0),
-];
+pub fn part_two(contents: String) {
+    let map: Vec<Vec<char>> = contents.split('\n').map(|s| s.chars().collect()).collect();
+    let height: usize = map.len();
+    let width: usize = map[0].len();
 
-pub fn part_two(contents: String) {}
+    let mut end = (0, 0);
+
+    let mut grid: Vec<Vec<usize>> = vec![vec![0; width]; height];
+
+    let mut locations_of_a: Vec<(usize, usize)> = vec![];
+
+    for i in 0..height {
+        for j in 0..width {
+            if map[i][j] == 'S' {
+                grid[i][j] = 0;
+                locations_of_a.push((i, j));
+            } else if map[i][j] == 'E' {
+                end = (i, j);
+                grid[i][j] = 26;
+            } else {
+                grid[i][j] = map[i][j] as usize - 'a' as usize;
+                if map[i][j] == 'a' {
+                    locations_of_a.push((i, j));
+                }
+            }
+        }
+    }
+
+    let mut distances: Vec<Vec<usize>> = vec![vec![0; width]; height];
+    distances[end.0][end.1] = 0;
+    let mut seen: VecDeque<(usize, usize)> = VecDeque::new();
+    seen.push_back(end);
+
+    while let Some(point) = seen.pop_front() {
+        let steps = distances[point.0][point.1];
+
+        if point.0 + 1 < height {
+            let new = (point.0 + 1, point.1);
+            if (distances[new.0][new.1] == 0 && new != end) || steps + 1 < distances[new.0][new.1] {
+                if grid[point.0][point.1] <= grid[new.0][new.1] + 1 {
+                    distances[new.0][new.1] = steps + 1;
+                    seen.push_back(new);
+                }
+            }
+        }
+        if point.0 > 0 {
+            let new = (point.0 - 1, point.1);
+            if (distances[new.0][new.1] == 0 && new != end) || steps + 1 < distances[new.0][new.1] {
+                if grid[point.0][point.1] <= grid[new.0][new.1] + 1 {
+                    distances[new.0][new.1] = steps + 1;
+                    seen.push_back(new);
+                }
+            }
+        }
+        if point.1 + 1 < width {
+            let new = (point.0, point.1 + 1);
+            if (distances[new.0][new.1] == 0 && new != end) || steps + 1 < distances[new.0][new.1] {
+                if grid[point.0][point.1] <= grid[new.0][new.1] + 1 {
+                    distances[new.0][new.1] = steps + 1;
+                    seen.push_back(new);
+                }
+            }
+        }
+        if point.1 > 0 {
+            let new = (point.0, point.1 - 1);
+            if (distances[new.0][new.1] == 0 && new != end) || steps + 1 < distances[new.0][new.1] {
+                if grid[point.0][point.1] <= grid[new.0][new.1] + 1 {
+                    distances[new.0][new.1] = steps + 1;
+                    seen.push_back(new);
+                }
+            }
+        }
+    }
+
+    let mut min = usize::MAX;
+
+    for point in locations_of_a {
+        if distances[point.0][point.1] != 0 {
+            min = min.min(distances[point.0][point.1]);
+        }
+    }
+
+    println!("Part two solution: {:#?}", min);
+}
