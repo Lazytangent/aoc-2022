@@ -5,14 +5,16 @@ use utils::{self, fs::DataType};
 pub fn solve(r#type: DataType, part: u8) {
     let contents = utils::fs::read_data(r#type);
 
-    match part {
-        1 => part_one(contents),
-        2 => part_two(contents),
+    let val = match part {
+        1 => part_one(&contents),
+        2 => part_two(&contents),
         _ => unreachable!(),
     };
+
+    println!("Part {part} solution: {val}");
 }
 
-pub fn part_one(contents: String) {
+pub fn part_one(contents: &str) -> usize {
     let map: Vec<Vec<char>> = contents.split('\n').map(|s| s.chars().collect()).collect();
     let height: usize = map.len();
     let width: usize = map[0].len();
@@ -81,10 +83,10 @@ pub fn part_one(contents: String) {
         }
     }
 
-    println!("Part one solution: {}", distances[end.0][end.1]);
+    distances[end.0][end.1]
 }
 
-pub fn part_two(contents: String) {
+pub fn part_two(contents: &str) -> usize {
     let map: Vec<Vec<char>> = contents.split('\n').map(|s| s.chars().collect()).collect();
     let height: usize = map.len();
     let width: usize = map[0].len();
@@ -166,5 +168,32 @@ pub fn part_two(contents: String) {
         }
     }
 
-    println!("Part two solution: {:#?}", min);
+    min
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{part_one, part_two};
+
+    const INPUT: &str = "Sabqponm
+abcryxxl
+accszExk
+acctuvwj
+abdefghi";
+
+    #[test]
+    fn part_one_works() {
+        let expected = 31;
+        let actual = part_one(INPUT);
+
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn part_two_works() {
+        let expected = 29;
+        let actual = part_two(INPUT);
+
+        assert_eq!(actual, expected);
+    }
 }
