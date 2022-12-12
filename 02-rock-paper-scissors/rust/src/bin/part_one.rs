@@ -2,7 +2,12 @@ use utils::{self, fs::DataType};
 
 fn main() {
     let contents = utils::fs::read_data(DataType::Real);
+    let score = part_one(&contents);
 
+    println!("First solution: {score}");
+}
+
+fn part_one(contents: &str) -> i32 {
     let rounds: Vec<String> = contents
         .split('\n')
         .map(String::from)
@@ -45,5 +50,22 @@ fn main() {
         }
     }
 
-    println!("First solution: {score}");
+    score
+}
+
+#[cfg(test)]
+mod tests {
+    use super::part_one;
+
+    const INPUT: &str = "A Y
+B X
+C Z";
+
+    #[test]
+    fn part_one_works() {
+        let expected = 15;
+        let actual = part_one(INPUT);
+
+        assert_eq!(actual, expected);
+    }
 }
