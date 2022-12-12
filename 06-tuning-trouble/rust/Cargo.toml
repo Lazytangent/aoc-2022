@@ -8,3 +8,6 @@ default-run = "sixth"
 
 [dependencies]
 utils = { path = "../../utils/rust" }
+
+[dev-dependencies]
+rstest = "0.16.0"
