@@ -13,6 +13,7 @@ members = [
   "11-monkey-in-the-middle/rust",
   "12-hill-climbing-algorithm/rust",
   "13-distress-signal/rust",
+  "14/rust",
   "utils/rust",
   "cli",
 ]
