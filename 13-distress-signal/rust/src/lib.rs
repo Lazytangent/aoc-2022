@@ -1,6 +1,7 @@
-use std::{cmp::Ordering::{Greater, Less}, collections::VecDeque};
-
-use itertools::Itertools;
+use std::{
+    cmp::Ordering::{Greater, Less},
+    collections::VecDeque,
+};
 
 use utils::{self, fs::DataType};
 
@@ -17,10 +18,7 @@ pub fn solve(r#type: DataType, part: u8) {
 }
 
 pub fn part_one(contents: &str) -> usize {
-    let mut packets: Vec<&str> = contents
-        .lines()
-        .filter(|line| line.len() != 0)
-        .collect();
+    let packets: Vec<&str> = contents.lines().filter(|line| line.len() != 0).collect();
 
     packets
         .chunks_exact(2)
@@ -53,7 +51,7 @@ fn compare(left: &str, right: &str) -> std::cmp::Ordering {
                 right.push_front(Token::Close);
                 right.push_front(rtoken.clone());
             }
-            (Token::Number(_),  Token::Open) => {
+            (Token::Number(_), Token::Open) => {
                 left.push_front(Token::Close);
                 left.push_front(ltoken.clone());
             }
@@ -105,12 +103,23 @@ fn scanner(s: &str) -> VecDeque<Token> {
 }
 
 pub fn part_two(contents: &str) -> usize {
-    unimplemented!()
+    let mut packets: Vec<&str> = contents.lines().filter(|line| line.len() != 0).collect();
+
+    const MARKER_1: &str = "[[2]]";
+    const MARKER_2: &str = "[[6]]";
+    packets.push(MARKER_1);
+    packets.push(MARKER_2);
+
+    packets.sort_by(|left, right| compare(left, right));
+    let index1 = packets.iter().position(|x| *x == MARKER_1).unwrap() + 1;
+    let index2 = packets.iter().position(|x| *x == MARKER_2).unwrap() + 1;
+
+    index1 * index2
 }
 
 #[cfg(test)]
 mod tests {
-    use super::part_one;
+    use super::{part_one, part_two};
 
     const INPUT: &str = "[1,1,3,1,1]
 [1,1,5,1,1]
@@ -140,6 +149,14 @@ mod tests {
     fn part_one_works() {
         let expected = 13;
         let actual = part_one(INPUT);
+
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn part_two_works() {
+        let expected = 140;
+        let actual = part_two(INPUT);
 
         assert_eq!(actual, expected);
     }
