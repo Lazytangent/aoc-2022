@@ -12,7 +12,7 @@ members = [
   "10-cathods-ray-tube/rust",
   "11-monkey-in-the-middle/rust",
   "12-hill-climbing-algorithm/rust",
-  "13/rust",
+  "13-distress-signal/rust",
   "utils/rust",
   "cli",
 ]
