@@ -40,3 +40,27 @@ pub fn part_two(contents: &str) -> usize {
 
     sand
 }
+
+#[cfg(test)]
+mod tests {
+    use super::{part_one, part_two};
+
+    const INPUT: &str = "498,4 -> 498,6 -> 496,6
+503,4 -> 502,4 -> 502,9 -> 494,9";
+
+    #[test]
+    fn one() {
+        let expected = 24;
+        let actual = part_one(INPUT);
+
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn two() {
+        let expected = 93;
+        let actual = part_two(INPUT);
+
+        assert_eq!(actual, expected);
+    }
+}
