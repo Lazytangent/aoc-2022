@@ -98,13 +98,19 @@ def main():
     sand = 0
     grid.put(500, 0, '.')
 
-    with open(f"../data/{FULL}") as f:
+    with open(f"../data/{SMALL}") as f:
         grid.read_file(file=f)
 
     while grid.drop(500, 0, grid.ymax):
         sand += 1
 
     print(f"Part one solution: {sand}")
+
+    while grid.grid[(500, 0)] == '.':
+        grid.drop(500, 0, grid.floor)
+        sand += 1
+
+    print(f"Part two solution: {sand}")
 
 
 if __name__ == "__main__":
