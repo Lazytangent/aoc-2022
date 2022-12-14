@@ -5,5 +5,6 @@ use fifteenth::solve;
 fn main() {
     let cli = utils::cli::run();
 
-    solve(cli.r#type, cli.part);
+    let r#type = utils::cli::get_type(&cli);
+    solve(r#type, cli.part);
 }
