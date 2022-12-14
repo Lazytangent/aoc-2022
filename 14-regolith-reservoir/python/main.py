@@ -1,3 +1,4 @@
+import argparse
 import typing
 
 
@@ -94,11 +95,21 @@ SMALL = "small.txt"
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-r', '--real', action='store_true')
+
+    args = parser.parse_args()
+
     grid = Grid()
     sand = 0
     grid.put(500, 0, '.')
 
-    with open(f"../data/{SMALL}") as f:
+    if args.real:
+        file = FULL
+    else:
+        file = SMALL
+
+    with open(f"../data/{file}") as f:
         grid.read_file(file=f)
 
     while grid.drop(500, 0, grid.ymax):
