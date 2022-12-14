@@ -33,7 +33,7 @@ pub fn part_two(contents: &str) -> usize {
     map.read(contents);
 
     let mut sand = 0;
-    while map.grid[&(500, 0)] == '.' {
+    while map.grid[500][0] == b'.' {
         map.drop(500, 0, map.floor);
         sand += 1;
     }

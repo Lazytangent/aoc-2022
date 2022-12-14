@@ -1,7 +1,8 @@
-use std::collections::HashMap;
+const WIDTH: usize = 1000;
+const HEIGHT: usize = 200;
 
 pub struct Grid {
-    pub grid: HashMap<(usize, usize), char>,
+    pub grid: [[u8; HEIGHT]; WIDTH],
     xmin: usize,
     xmax: usize,
     ymin: usize,
@@ -12,7 +13,7 @@ pub struct Grid {
 impl Grid {
     pub fn new() -> Self {
         Self {
-            grid: HashMap::new(),
+            grid: [[b' '; HEIGHT]; WIDTH],
             xmin: 500,
             xmax: 500,
             ymin: 0,
@@ -36,7 +37,7 @@ impl Grid {
             self.ymin = y;
         }
 
-        self.grid.insert((x, y), c);
+        self.grid[x][y] = c as u8;
     }
 
     pub fn show(&mut self) {
@@ -44,12 +45,12 @@ impl Grid {
             let mut line = String::new();
 
             for x in self.xmin..self.xmax + 1 {
-                if !self.grid.contains_key(&(x, y)) {
+                if self.grid[x][y] == b' ' {
                     let c = self.choose_char(y);
                     self.put(x, y, c);
                 }
 
-                line.push(self.grid[&(x, y)]);
+                line.push(self.grid[x][y] as char);
             }
 
             println!("{line}");
@@ -60,23 +61,23 @@ impl Grid {
         let (mut x, mut y) = (x, y);
 
         while y < cap {
-            if !self.grid.contains_key(&(x - 1, y + 1)) {
+            if self.grid[x-1][y+1] == b' ' {
                 self.put(x - 1, y + 1, self.choose_char(y + 1));
             }
-            if !self.grid.contains_key(&(x, y + 1)) {
+            if self.grid[x][y+1] == b' ' {
                 self.put(x, y + 1, self.choose_char(y + 1));
             }
-            if !self.grid.contains_key(&(x + 1, y + 1)) {
+            if self.grid[x+1][y+1] == b' ' {
                 self.put(x + 1, y + 1, self.choose_char(y + 1));
             }
 
-            if self.grid[&(x, y + 1)] == '.' {
+            if self.grid[x][y+1] == b'.' {
                 y += 1;
             } else {
-                if self.grid[&(x - 1, y + 1)] == '.' {
+                if self.grid[x-1][y+1] == b'.' {
                     x -= 1;
                     y += 1;
-                } else if self.grid[&(x + 1, y + 1)] == '.' {
+                } else if self.grid[x+1][y+1] == b'.' {
                     x += 1;
                     y += 1;
                 } else {
