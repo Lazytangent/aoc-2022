@@ -1,1 +1,22 @@
 #+title: Collection of Personal Advent of Code Solutions for 2022
+
+** Run tests
+Run unit tests with:
+#+BEGIN_SRC bash
+cargo test --lib --workspace
+#+END_SRC
+
+For quieter output:
+#+BEGIN_SRC bash
+cargo t --lib --workspace --quiet
+# OR
+cargo t --lib --workspace -q
+#+END_SRC
+
+For even quieter output:
+#+BEGIN_SRC bash
+cargo t --lib --workspace -q 2>/dev/null
+#+END_SRC
+
+This last command sends the =cargo build= warnings to the =null= device, so that
+they don't pollute the test output.
