@@ -42,7 +42,6 @@ pub fn part_one(contents: &str, y_row: i32) -> usize {
 }
 
 pub fn part_two(contents: &str, r#type: DataType) -> usize {
-    let positions: Vec<&str> = contents.split('\n').collect();
     let sensors = Sensor::read_from_input(contents);
 
     let max = match r#type {
