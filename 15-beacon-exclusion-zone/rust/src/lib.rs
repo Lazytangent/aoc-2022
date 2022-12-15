@@ -27,32 +27,15 @@ pub fn solve(r#type: DataType, part: u8) {
 }
 
 pub fn part_one(contents: &str, y_row: i32) -> usize {
-    let positions: Vec<&str> = contents.split('\n').collect();
+    let sensors = Sensor::read_from_input(contents);
     let mut set: HashSet<Coordinate> = HashSet::new();
 
-    for position in positions {
-        let position: Vec<&str> = position.split(": ").collect();
-        let sensor_data: Vec<&str> = position[0].split(' ').collect();
-        let beacon_data: Vec<&str> = position[1].split(' ').collect();
-
-        let sensor_x_data: Vec<&str> = sensor_data[2].trim_end_matches(',').split('=').collect();
-        let sensor_y_data: Vec<&str> = sensor_data[3].split('=').collect();
-        let sensor_x: i32 = sensor_x_data[1].parse().unwrap();
-        let sensor_y: i32 = sensor_y_data[1].parse().unwrap();
-
-        let beacon_x_data: Vec<&str> = beacon_data[4].trim_end_matches(',').split('=').collect();
-        let beacon_y_data: Vec<&str> = beacon_data[5].split('=').collect();
-        let beacon_x: i32 = beacon_x_data[1].parse().unwrap();
-        let beacon_y: i32 = beacon_y_data[1].parse().unwrap();
-
-        let sensor = Coordinate::new(sensor_x, sensor_y);
-        let beacon = Coordinate::new(beacon_x, beacon_y);
-
-        for c in sensor.coords_on_y_row(&beacon, y_row) {
+    for s in sensors {
+        for c in s.coords_on_y_row(y_row) {
             set.insert(c);
         }
 
-        set.remove(&beacon);
+        set.remove(&s.beacon);
     }
 
     set.len()
@@ -60,89 +43,76 @@ pub fn part_one(contents: &str, y_row: i32) -> usize {
 
 pub fn part_two(contents: &str, r#type: DataType) -> usize {
     let positions: Vec<&str> = contents.split('\n').collect();
+    let sensors = Sensor::read_from_input(contents);
 
-    match r#type {
-        DataType::Sample => {
-            let mut sensors: Vec<(Coordinate, Coordinate)> = vec![];
-
-            for position in positions {
-                let position: Vec<&str> = position.split(": ").collect();
-                let sensor_data: Vec<&str> = position[0].split(' ').collect();
-                let beacon_data: Vec<&str> = position[1].split(' ').collect();
-
-                let sensor_x_data: Vec<&str> = sensor_data[2].trim_end_matches(',').split('=').collect();
-                let sensor_y_data: Vec<&str> = sensor_data[3].split('=').collect();
-                let sensor_x: i32 = sensor_x_data[1].parse().unwrap();
-                let sensor_y: i32 = sensor_y_data[1].parse().unwrap();
-
-                let beacon_x_data: Vec<&str> = beacon_data[4].trim_end_matches(',').split('=').collect();
-                let beacon_y_data: Vec<&str> = beacon_data[5].split('=').collect();
-                let beacon_x: i32 = beacon_x_data[1].parse().unwrap();
-                let beacon_y: i32 = beacon_y_data[1].parse().unwrap();
-
-                let sensor = Coordinate::new(sensor_x, sensor_y);
-                let beacon = Coordinate::new(beacon_x, beacon_y);
-
-                sensors.push((sensor, beacon));
-            }
-
-            for s in &sensors {
-                for p in s.0.border_points(&s.1) {
-                    if p.x < 0 || p.y < 0 || p.x > SMALL_MAX as i32 || p.y > SMALL_MAX as i32 {
-                        continue;
-                    }
-
-                    if sensors.iter().any(|s2| s2.0.within_beacon_distance(&s2.1, &p)) {
-                        continue;
-                    }
-
-                    return (p.x * 4_000_000 + p.y) as usize;
-                }
-            }
-
-            unreachable!()
-        }
-        DataType::Real => {
-            let mut sensors: Vec<(Coordinate, Coordinate)> = vec![];
-
-            for position in positions {
-                let position: Vec<&str> = position.split(": ").collect();
-                let sensor_data: Vec<&str> = position[0].split(' ').collect();
-                let beacon_data: Vec<&str> = position[1].split(' ').collect();
-
-                let sensor_x_data: Vec<&str> = sensor_data[2].trim_end_matches(',').split('=').collect();
-                let sensor_y_data: Vec<&str> = sensor_data[3].split('=').collect();
-                let sensor_x: i32 = sensor_x_data[1].parse().unwrap();
-                let sensor_y: i32 = sensor_y_data[1].parse().unwrap();
-
-                let beacon_x_data: Vec<&str> = beacon_data[4].trim_end_matches(',').split('=').collect();
-                let beacon_y_data: Vec<&str> = beacon_data[5].split('=').collect();
-                let beacon_x: i32 = beacon_x_data[1].parse().unwrap();
-                let beacon_y: i32 = beacon_y_data[1].parse().unwrap();
-
-                let sensor = Coordinate::new(sensor_x, sensor_y);
-                let beacon = Coordinate::new(beacon_x, beacon_y);
-
-                sensors.push((sensor, beacon));
-            }
-
-            for s in &sensors {
-                for p in s.0.border_points(&s.1) {
-                    if p.x < 0 || p.y < 0 || p.x > MAX as i32 || p.y > MAX as i32 {
-                        continue;
-                    }
-
-                    if sensors.iter().any(|s2| s2.0.within_beacon_distance(&s2.1, &p)) {
-                        continue;
-                    }
-
-                    return p.x as usize * 4_000_000 + p.y as usize;
-                }
-            }
-
-            unreachable!()
-        }
+    let max = match r#type {
+        DataType::Sample => SMALL_MAX,
+        DataType::Real => MAX,
         _ => unreachable!(),
+    };
+
+    for s in &sensors {
+        for p in s.border_points() {
+            if p.x < 0 || p.y < 0 || p.x > max as i32 || p.y > max as i32 {
+                continue;
+            }
+
+            if sensors.iter().any(|s2| s2.within_beacon_distance(&p)) {
+                continue;
+            }
+
+            return p.x as usize * 4_000_000 + p.y as usize;
+        }
+    }
+
+    unreachable!()
+}
+
+#[derive(Debug)]
+struct Sensor {
+    coord: Coordinate,
+    beacon: Coordinate,
+}
+
+impl Sensor {
+    fn read_from_input(input: &str) -> Vec<Sensor> {
+        let mut sensors: Vec<Sensor> = vec![];
+        let positions: Vec<&str> = input.split('\n').collect();
+
+        for position in positions {
+            let position: Vec<&str> = position.split(": ").collect();
+            let sensor_data: Vec<&str> = position[0].split(' ').collect();
+            let beacon_data: Vec<&str> = position[1].split(' ').collect();
+
+            let sensor_x_data: Vec<&str> = sensor_data[2].trim_end_matches(',').split('=').collect();
+            let sensor_y_data: Vec<&str> = sensor_data[3].split('=').collect();
+            let sensor_x: i32 = sensor_x_data[1].parse().unwrap();
+            let sensor_y: i32 = sensor_y_data[1].parse().unwrap();
+
+            let beacon_x_data: Vec<&str> = beacon_data[4].trim_end_matches(',').split('=').collect();
+            let beacon_y_data: Vec<&str> = beacon_data[5].split('=').collect();
+            let beacon_x: i32 = beacon_x_data[1].parse().unwrap();
+            let beacon_y: i32 = beacon_y_data[1].parse().unwrap();
+
+            let sensor = Coordinate::new(sensor_x, sensor_y);
+            let beacon = Coordinate::new(beacon_x, beacon_y);
+
+            sensors.push(Sensor { coord: sensor, beacon });
+        }
+
+        sensors
+    }
+
+    fn coords_on_y_row(&self, y_row: i32) -> HashSet<Coordinate> {
+        self.coord.coords_on_y_row(&self.beacon, y_row)
+    }
+
+    fn border_points(&self) -> Vec<Coordinate> {
+        self.coord.border_points(&self.beacon)
+    }
+
+    fn within_beacon_distance(&self, other: &Coordinate) -> bool {
+        self.coord.within_beacon_distance(&self.beacon, other)
     }
 }
 
