@@ -13,7 +13,13 @@ pub fn solve(r#type: DataType, part: u8) {
                 _ => unreachable!(),
             }
         }
-        2 => part_two(&contents),
+        2 => {
+            match r#type {
+                DataType::Sample => part_two(&contents, 20, r#type),
+                DataType::Real => part_two(&contents, 4_000_000, r#type),
+                _ => unreachable!(),
+            }
+        }
         _ => unreachable!(),
     };
 
@@ -52,8 +58,64 @@ pub fn part_one(contents: &str, y_row: i32) -> usize {
     set.len()
 }
 
-pub fn part_two(contents: &str) -> usize {
-    unimplemented!()
+pub fn part_two(contents: &str, max_y: i32, r#type: DataType) -> usize {
+    let positions: Vec<&str> = contents.split('\n').collect();
+
+    match r#type {
+        DataType::Sample => {
+            let mut grid = SmallGrid::new();
+            for position in positions {
+                let position: Vec<&str> = position.split(": ").collect();
+                let sensor_data: Vec<&str> = position[0].split(' ').collect();
+                let beacon_data: Vec<&str> = position[1].split(' ').collect();
+
+                let sensor_x_data: Vec<&str> = sensor_data[2].trim_end_matches(',').split('=').collect();
+                let sensor_y_data: Vec<&str> = sensor_data[3].split('=').collect();
+                let sensor_x: i32 = sensor_x_data[1].parse().unwrap();
+                let sensor_y: i32 = sensor_y_data[1].parse().unwrap();
+
+                let beacon_x_data: Vec<&str> = beacon_data[4].trim_end_matches(',').split('=').collect();
+                let beacon_y_data: Vec<&str> = beacon_data[5].split('=').collect();
+                let beacon_x: i32 = beacon_x_data[1].parse().unwrap();
+                let beacon_y: i32 = beacon_y_data[1].parse().unwrap();
+
+                let sensor = Coordinate::new(sensor_x, sensor_y);
+                let beacon = Coordinate::new(beacon_x, beacon_y);
+
+                grid.add_sensor_pair(&sensor, &beacon);
+            }
+
+            let c = grid.find_empty();
+            (c.x * 4_000_000 + c.y) as usize
+        }
+        DataType::Real => {
+            let mut grid = Grid::new();
+            for position in positions {
+                let position: Vec<&str> = position.split(": ").collect();
+                let sensor_data: Vec<&str> = position[0].split(' ').collect();
+                let beacon_data: Vec<&str> = position[1].split(' ').collect();
+
+                let sensor_x_data: Vec<&str> = sensor_data[2].trim_end_matches(',').split('=').collect();
+                let sensor_y_data: Vec<&str> = sensor_data[3].split('=').collect();
+                let sensor_x: i32 = sensor_x_data[1].parse().unwrap();
+                let sensor_y: i32 = sensor_y_data[1].parse().unwrap();
+
+                let beacon_x_data: Vec<&str> = beacon_data[4].trim_end_matches(',').split('=').collect();
+                let beacon_y_data: Vec<&str> = beacon_data[5].split('=').collect();
+                let beacon_x: i32 = beacon_x_data[1].parse().unwrap();
+                let beacon_y: i32 = beacon_y_data[1].parse().unwrap();
+
+                let sensor = Coordinate::new(sensor_x, sensor_y);
+                let beacon = Coordinate::new(beacon_x, beacon_y);
+
+                grid.add_sensor_pair(&sensor, &beacon);
+            }
+
+            let c = grid.find_empty();
+            (c.x * 4_000_000 + c.y) as usize
+        }
+        _ => unreachable!(),
+    }
 }
 
 #[derive(Debug, Eq, PartialEq, Hash)]
@@ -107,8 +169,82 @@ impl Coordinate {
     }
 }
 
+const SMALL_MAX: usize = 20;
+const MAX: usize = 4_000_000;
+
+#[derive(Debug)]
+struct Grid {
+    matrix: [[bool; MAX + 1]; MAX + 1],
+}
+
+#[derive(Debug)]
+struct SmallGrid {
+    matrix: [[bool; SMALL_MAX + 1]; SMALL_MAX + 1],
+}
+
+impl Grid {
+    fn new() -> Self {
+        Self {
+            matrix: [[true; MAX + 1]; MAX + 1],
+        }
+    }
+
+    fn add_sensor_pair(&mut self, sensor: &Coordinate, beacon: &Coordinate) {
+        for y in 0..self.matrix.len() {
+            for c in sensor.coords_on_y_row(beacon, y as i32) {
+                if c.x >= 0 && c.x <= MAX as i32 && c.y >= 0 && c.y <= MAX as i32 {
+                    self.matrix[c.x as usize][c.y as usize] = false;
+                }
+            }
+        }
+    }
+
+    fn find_empty(&self) -> Coordinate {
+        for x in 0..self.matrix.len() {
+            for y in 0..self.matrix.len() {
+                if self.matrix[x][y] {
+                    return Coordinate::new(x as i32, y as i32);
+                }
+            }
+        }
+
+        unreachable!()
+    }
+}
+
+impl SmallGrid {
+    fn new() -> Self {
+        Self {
+            matrix: [[true; SMALL_MAX + 1]; SMALL_MAX + 1],
+        }
+    }
+
+    fn add_sensor_pair(&mut self, sensor: &Coordinate, beacon: &Coordinate) {
+        for y in 0..=SMALL_MAX {
+            for c in sensor.coords_on_y_row(beacon, y as i32) {
+                if c.x >= 0 && c.x <= SMALL_MAX as i32 && c.y >= 0 && c.y <= SMALL_MAX as i32 {
+                    self.matrix[c.x as usize][c.y as usize] = false;
+                }
+            }
+        }
+    }
+
+    fn find_empty(&self) -> Coordinate {
+        for x in 0..self.matrix.len() {
+            for y in 0..self.matrix.len() {
+                if self.matrix[x][y] {
+                    return Coordinate::new(x as i32, y as i32);
+                }
+            }
+        }
+
+        unreachable!()
+    }
+}
+
 #[cfg(test)]
 mod tests {
+    use utils::fs::DataType;
     use super::{part_one, part_two};
 
     const INPUT: &str = "Sensor at x=2, y=18: closest beacon is at x=-2, y=15
@@ -129,5 +265,10 @@ Sensor at x=20, y=1: closest beacon is at x=15, y=3";
     #[test]
     fn one() {
         assert_eq!(part_one(INPUT, 10), 26);
+    }
+
+    #[test]
+    fn two() {
+        assert_eq!(part_two(INPUT, 20, DataType::Sample), 56_000_011);
     }
 }
