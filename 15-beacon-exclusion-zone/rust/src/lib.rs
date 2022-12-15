@@ -63,7 +63,8 @@ pub fn part_two(contents: &str, max_y: i32, r#type: DataType) -> usize {
 
     match r#type {
         DataType::Sample => {
-            let mut grid = SmallGrid::new();
+            let mut sensors: Vec<(Coordinate, Coordinate)> = vec![];
+
             for position in positions {
                 let position: Vec<&str> = position.split(": ").collect();
                 let sensor_data: Vec<&str> = position[0].split(' ').collect();
@@ -82,14 +83,28 @@ pub fn part_two(contents: &str, max_y: i32, r#type: DataType) -> usize {
                 let sensor = Coordinate::new(sensor_x, sensor_y);
                 let beacon = Coordinate::new(beacon_x, beacon_y);
 
-                grid.add_sensor_pair(&sensor, &beacon);
+                sensors.push((sensor, beacon));
             }
 
-            let c = grid.find_empty();
-            (c.x * 4_000_000 + c.y) as usize
+            for s in &sensors {
+                for p in s.0.border_points(&s.1) {
+                    if p.x < 0 || p.y < 0 || p.x > SMALL_MAX as i32 || p.y > SMALL_MAX as i32 {
+                        continue;
+                    }
+
+                    if sensors.iter().any(|s2| s2.0.within_beacon_distance(&s2.1, &p)) {
+                        continue;
+                    }
+
+                    return (p.x * 4_000_000 + p.y) as usize;
+                }
+            }
+
+            unreachable!()
         }
         DataType::Real => {
-            let mut grid = Grid::new();
+            let mut sensors: Vec<(Coordinate, Coordinate)> = vec![];
+
             for position in positions {
                 let position: Vec<&str> = position.split(": ").collect();
                 let sensor_data: Vec<&str> = position[0].split(' ').collect();
@@ -108,11 +123,24 @@ pub fn part_two(contents: &str, max_y: i32, r#type: DataType) -> usize {
                 let sensor = Coordinate::new(sensor_x, sensor_y);
                 let beacon = Coordinate::new(beacon_x, beacon_y);
 
-                grid.add_sensor_pair(&sensor, &beacon);
+                sensors.push((sensor, beacon));
             }
 
-            let c = grid.find_empty();
-            (c.x * 4_000_000 + c.y) as usize
+            for s in &sensors {
+                for p in s.0.border_points(&s.1) {
+                    if p.x < 0 || p.y < 0 || p.x > MAX as i32 || p.y > MAX as i32 {
+                        continue;
+                    }
+
+                    if sensors.iter().any(|s2| s2.0.within_beacon_distance(&s2.1, &p)) {
+                        continue;
+                    }
+
+                    return p.x as usize * 4_000_000 + p.y as usize;
+                }
+            }
+
+            unreachable!()
         }
         _ => unreachable!(),
     }
@@ -166,6 +194,25 @@ impl Coordinate {
         }
 
         set
+    }
+
+    fn border_points(&self, other: &Coordinate) -> Vec<Coordinate> {
+        let d = self.calculate_manhattan_distance(other) + 1;
+        let (ox, oy) = (self.x, self.y);
+        (0..d)
+            .flat_map(|step| {
+                vec![
+                    Coordinate::new(ox + step, oy + step - d),
+                    Coordinate::new(ox + d - step, oy + step),
+                    Coordinate::new(ox - step, oy + d - step),
+                    Coordinate::new(ox + step - d, oy - step),
+                ]
+            })
+            .collect()
+    }
+
+    fn within_beacon_distance(&self, beacon: &Coordinate, other: &Coordinate) -> bool {
+        self.calculate_manhattan_distance(other) <= self.calculate_manhattan_distance(beacon)
     }
 }
 
