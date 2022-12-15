@@ -1,3 +1,5 @@
+use std::fmt;
+
 use clap::Parser;
 
 use crate::fs::DataType;
@@ -13,6 +15,9 @@ pub struct Cli {
     /// Whether or not to use the real data
     #[arg(short, long, default_value_t = false)]
     pub real: bool,
+    /// Run part two
+    #[arg(short = '2', default_value_t = false)]
+    pub two: bool,
 }
 
 pub fn run() -> Cli {
@@ -26,5 +31,29 @@ pub fn get_type(cli: &Cli) -> DataType {
         (DataType::Sample, true) => DataType::Real,
         (DataType::Real, true) => DataType::Real,
         (DataType::SampleTwo, _) => DataType::SampleTwo,
+    }
+}
+
+#[repr(u8)]
+pub enum Part {
+    One = 1,
+    Two,
+}
+
+impl fmt::Display for Part {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let content = match self {
+            Part::One => "one",
+            Part::Two => "two",
+        };
+
+        write!(f, "{}", content)
+    }
+}
+
+pub fn get_part(cli: &Cli) -> Part {
+    match (cli.part, cli.two) {
+        (1, false) => Part::One,
+        (_, _) => Part::Two,
     }
 }
