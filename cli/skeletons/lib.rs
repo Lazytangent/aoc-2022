@@ -12,7 +12,7 @@ pub fn solve(r#type: DataType, part: Part) {
 }
 
 pub fn part_one(contents: &str) {
-    let GROUPS: Vec<String> = contents.split('\n').map(String::from).collect();
+    let GROUPS: Vec<&str> = contents.split('\n').collect();
 }
 
 pub fn part_two(contents: &str) {}
