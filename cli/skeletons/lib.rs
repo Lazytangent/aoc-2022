@@ -1,12 +1,11 @@
-use utils::{self, fs::DataType};
+use utils::{self, cli::Part, fs::DataType};
 
-pub fn solve(r#type: DataType, part: u8) {
+pub fn solve(r#type: DataType, part: Part) {
     let contents = utils::fs::read_data(r#type);
 
     let val = match part {
-        1 => part_one(&contents),
-        2 => part_two(&contents),
-        _ => unreachable!(),
+        Part::One => part_one(&contents),
+        Part::Two => part_two(&contents),
     };
 
     println!("Part {part} solution: {val:?}");
