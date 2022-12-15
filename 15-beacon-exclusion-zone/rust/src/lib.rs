@@ -27,15 +27,32 @@ pub fn solve(r#type: DataType, part: u8) {
 }
 
 pub fn part_one(contents: &str, y_row: i32) -> usize {
-    let sensors = Sensor::read_from_input(contents);
+    let positions: Vec<&str> = contents.split('\n').collect();
     let mut set: HashSet<Coordinate> = HashSet::new();
 
-    for s in sensors {
-        for c in s.coords_on_y_row(y_row) {
+    for position in positions {
+        let position: Vec<&str> = position.split(": ").collect();
+        let sensor_data: Vec<&str> = position[0].split(' ').collect();
+        let beacon_data: Vec<&str> = position[1].split(' ').collect();
+
+        let sensor_x_data: Vec<&str> = sensor_data[2].trim_end_matches(',').split('=').collect();
+        let sensor_y_data: Vec<&str> = sensor_data[3].split('=').collect();
+        let sensor_x: i32 = sensor_x_data[1].parse().unwrap();
+        let sensor_y: i32 = sensor_y_data[1].parse().unwrap();
+
+        let beacon_x_data: Vec<&str> = beacon_data[4].trim_end_matches(',').split('=').collect();
+        let beacon_y_data: Vec<&str> = beacon_data[5].split('=').collect();
+        let beacon_x: i32 = beacon_x_data[1].parse().unwrap();
+        let beacon_y: i32 = beacon_y_data[1].parse().unwrap();
+
+        let sensor = Coordinate::new(sensor_x, sensor_y);
+        let beacon = Coordinate::new(beacon_x, beacon_y);
+
+        for c in sensor.coords_on_y_row(&beacon, y_row) {
             set.insert(c);
         }
 
-        set.remove(&s.beacon);
+        set.remove(&beacon);
     }
 
     set.len()
@@ -113,9 +130,23 @@ impl Sensor {
     fn within_beacon_distance(&self, other: &Coordinate) -> bool {
         self.coord.within_beacon_distance(&self.beacon, other)
     }
+
+    fn beacons_from_sensors(sensors: &Vec<Sensor>) -> Vec<Coordinate> {
+        let mut set: HashSet<Coordinate> = HashSet::new();
+        for s in sensors {
+            set.insert(s.beacon.clone());
+        }
+
+        let mut beacons: Vec<Coordinate> = vec![];
+        for b in set {
+            beacons.push(b);
+        }
+
+        beacons
+    }
 }
 
-#[derive(Debug, Eq, PartialEq, Hash)]
+#[derive(Debug, Eq, PartialEq, Hash, Clone)]
 struct Coordinate {
     x: i32,
     y: i32,
