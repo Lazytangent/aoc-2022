@@ -15,8 +15,8 @@ pub fn solve(r#type: DataType, part: u8) {
         }
         2 => {
             match r#type {
-                DataType::Sample => part_two(&contents, 20, r#type),
-                DataType::Real => part_two(&contents, 4_000_000, r#type),
+                DataType::Sample => part_two(&contents, r#type),
+                DataType::Real => part_two(&contents, r#type),
                 _ => unreachable!(),
             }
         }
@@ -58,7 +58,7 @@ pub fn part_one(contents: &str, y_row: i32) -> usize {
     set.len()
 }
 
-pub fn part_two(contents: &str, max_y: i32, r#type: DataType) -> usize {
+pub fn part_two(contents: &str, r#type: DataType) -> usize {
     let positions: Vec<&str> = contents.split('\n').collect();
 
     match r#type {
@@ -219,76 +219,6 @@ impl Coordinate {
 const SMALL_MAX: usize = 20;
 const MAX: usize = 4_000_000;
 
-#[derive(Debug)]
-struct Grid {
-    matrix: [[bool; MAX + 1]; MAX + 1],
-}
-
-#[derive(Debug)]
-struct SmallGrid {
-    matrix: [[bool; SMALL_MAX + 1]; SMALL_MAX + 1],
-}
-
-impl Grid {
-    fn new() -> Self {
-        Self {
-            matrix: [[true; MAX + 1]; MAX + 1],
-        }
-    }
-
-    fn add_sensor_pair(&mut self, sensor: &Coordinate, beacon: &Coordinate) {
-        for y in 0..self.matrix.len() {
-            for c in sensor.coords_on_y_row(beacon, y as i32) {
-                if c.x >= 0 && c.x <= MAX as i32 && c.y >= 0 && c.y <= MAX as i32 {
-                    self.matrix[c.x as usize][c.y as usize] = false;
-                }
-            }
-        }
-    }
-
-    fn find_empty(&self) -> Coordinate {
-        for x in 0..self.matrix.len() {
-            for y in 0..self.matrix.len() {
-                if self.matrix[x][y] {
-                    return Coordinate::new(x as i32, y as i32);
-                }
-            }
-        }
-
-        unreachable!()
-    }
-}
-
-impl SmallGrid {
-    fn new() -> Self {
-        Self {
-            matrix: [[true; SMALL_MAX + 1]; SMALL_MAX + 1],
-        }
-    }
-
-    fn add_sensor_pair(&mut self, sensor: &Coordinate, beacon: &Coordinate) {
-        for y in 0..=SMALL_MAX {
-            for c in sensor.coords_on_y_row(beacon, y as i32) {
-                if c.x >= 0 && c.x <= SMALL_MAX as i32 && c.y >= 0 && c.y <= SMALL_MAX as i32 {
-                    self.matrix[c.x as usize][c.y as usize] = false;
-                }
-            }
-        }
-    }
-
-    fn find_empty(&self) -> Coordinate {
-        for x in 0..self.matrix.len() {
-            for y in 0..self.matrix.len() {
-                if self.matrix[x][y] {
-                    return Coordinate::new(x as i32, y as i32);
-                }
-            }
-        }
-
-        unreachable!()
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use utils::fs::DataType;
@@ -316,6 +246,6 @@ Sensor at x=20, y=1: closest beacon is at x=15, y=3";
 
     #[test]
     fn two() {
-        assert_eq!(part_two(INPUT, 20, DataType::Sample), 56_000_011);
+        assert_eq!(part_two(INPUT, DataType::Sample), 56_000_011);
     }
 }
