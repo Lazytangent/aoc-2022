@@ -14,7 +14,7 @@ members = [
   "12-hill-climbing-algorithm/rust",
   "13-distress-signal/rust",
   "14-regolith-reservoir/rust",
-  "15/rust",
+  "15-beacon-exclusion-zone/rust",
   "utils/rust",
   "cli",
 ]
