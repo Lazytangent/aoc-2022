@@ -13,7 +13,7 @@ pub fn solve(r#type: DataType, part: u8) {
 }
 
 pub fn part_one(contents: &str) {
-    let GROUPS: Vec<String> = contents.split('\n').map(String::from).collect();
+    let valves: Vec<&str> = contents.split('\n').collect();
 }
 
 pub fn part_two(contents: &str) {}
