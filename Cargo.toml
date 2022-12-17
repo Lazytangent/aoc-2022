@@ -16,7 +16,7 @@ members = [
   "14-regolith-reservoir/rust",
   "15-beacon-exclusion-zone/rust",
   "16-proboscidea-volcanium/rust",
-  "17/rust",
+  "17-pyroclastic-flow/rust",
   "utils/rust",
   "cli",
 ]
