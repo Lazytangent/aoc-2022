@@ -1,3 +1,7 @@
+mod part_2;
+
+use std::collections::{HashMap, hash_map::Entry};
+
 use utils::{self, cli::Part, fs::DataType};
 
 pub fn solve(r#type: DataType, part: Part) {
@@ -128,17 +132,68 @@ pub fn part_one(contents: &str) -> usize {
 }
 
 pub fn part_two(contents: &str) -> usize {
-    unimplemented!()
+    let num_rocks = 1_000_000_000_000;
+    let mut seen_states = HashMap::with_capacity(1_024);
+    let mut tower = Vec::with_capacity(1_024);
+
+    let mut cycle_height = 0;
+    let mut wind_idx = 0;
+    let shapes: Vec<Shape> = Shape::all_shapes().into_iter().collect();
+    let mut n = 0;
+
+    let input: Vec<Wind> = contents.chars().map(|c| {
+        if c == '<' {
+            Wind::Left
+        } else {
+            Wind::Right
+        }
+    }).collect();
+
+    while n < num_rocks {
+        let shape_idx = n % shapes.len();
+        let shape = shapes[shape_idx];
+
+        wind_idx = drop_rock(&mut tower, &input, wind_idx, shape);
+        n += 1;
+
+        if tower.len() < 8 {
+            continue;
+        }
+
+        let skyline = u64::from_ne_bytes(tower[tower.len() - 8..].try_into().unwrap());
+        let state = (skyline, shape_idx, wind_idx);
+
+        match seen_states.entry(state) {
+            Entry::Occupied(e) => {
+                let (old_n, old_height) = e.get();
+                let num_rocks_in_cycle = n - old_n;
+                let num_cycles = (num_rocks - n) / num_rocks_in_cycle;
+                n += num_rocks_in_cycle * num_cycles;
+                cycle_height += num_cycles * (tower.len() - old_height);
+                seen_states.clear();
+            }
+            Entry::Vacant(e) => {
+                e.insert((n, tower.len()));
+            }
+        }
+    }
+
+    tower.len() + cycle_height
 }
 
 #[cfg(test)]
 mod tests {
-    use super::part_one;
+    use super::{part_one, part_two};
 
     const INPUT: &str = ">>><<><>><<<>><>>><<<>>><<<><<<>><>><<>>";
 
     #[test]
     fn one() {
         assert_eq!(part_one(INPUT), 3068);
+    }
+
+    #[test]
+    fn two() {
+        assert_eq!(part_two(INPUT), 1514285714288);
     }
 }
