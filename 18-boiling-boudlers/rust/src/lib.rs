@@ -1,4 +1,4 @@
-use std::str::FromStr;
+use std::{str::FromStr, collections::HashSet};
 
 use utils::{self, cli::Part, fs::DataType};
 
@@ -13,7 +13,7 @@ pub fn solve(r#type: DataType, part: Part) {
     println!("Part {part} solution: {val:?}");
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Eq, Hash, PartialEq)]
 struct Point {
     x: i32,
     y: i32,
@@ -76,6 +76,45 @@ pub fn part_one(contents: &str) -> usize {
 }
 
 pub fn part_two(contents: &str) -> usize {
+    let mut points: Vec<Point> = contents.split('\n').map(|l| l.parse().unwrap()).collect();
+
+    for i in 1..points.len() {
+        for j in (0..i).rev() {
+            let mut curr = points[i].clone();
+            let mut prev = points[j].clone();
+
+            if curr.x == prev.x && curr.y == prev.y && (curr.z == prev.z - 1 || curr.z == prev.z + 1) {
+                if curr.sides_uncovered > 0 {
+                    curr.sides_uncovered -= 1;
+                }
+                if prev.sides_uncovered > 0 {
+                    prev.sides_uncovered -= 1;
+                }
+            } else if curr.z == prev.z && curr.y == prev.y && (curr.x == prev.x - 1 || curr.x == prev.x + 1) {
+                if curr.sides_uncovered > 0 {
+                    curr.sides_uncovered -= 1;
+                }
+                if prev.sides_uncovered > 0 {
+                    prev.sides_uncovered -= 1;
+                }
+            } else if curr.x == prev.x && curr.z == prev.z && (curr.y == prev.y - 1 || curr.y == prev.y + 1) {
+                if curr.sides_uncovered > 0 {
+                    curr.sides_uncovered -= 1;
+                }
+                if prev.sides_uncovered > 0 {
+                    prev.sides_uncovered -= 1;
+                }
+            }
+
+            points[i] = curr;
+            points[j] = prev;
+        }
+    }
+
+    let total_sides_uncovered: usize = points.iter().map(|p| p.sides_uncovered as usize).sum();
+    let set: HashSet<Point> = HashSet::from_iter(points.iter().map(|p| p.to_owned()));
+
+
     unimplemented!()
 }
 
