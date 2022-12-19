@@ -18,6 +18,7 @@ members = [
   "16-proboscidea-volcanium/rust",
   "17-pyroclastic-flow/rust",
   "18-boiling-boudlers/rust",
+  "19-not-enough-minerals/rust",
   "utils/rust",
   "cli",
 ]
