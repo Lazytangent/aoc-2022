@@ -54,13 +54,24 @@ fn calculate_coordinates(data: &Vec<i64>, positions: VecDeque<usize>) -> i64 {
     .sum()
 }
 
+const DECRYPTION_KEY: i64 = 811589153;
+
 pub fn part_two(contents: &str) -> i64 {
-    unimplemented!()
+    let numbers: Vec<i64> = contents.split('\n').map(|s| s.parse().unwrap()).collect();
+    let data: Vec<i64> = numbers.iter().map(|x| *x * DECRYPTION_KEY).collect();
+    let mut positions: VecDeque<usize> = (0..numbers.len()).collect();
+    let wrap = positions.len() - 1;
+
+    for _ in 0..10 {
+        mix(&data, &mut positions, wrap);
+    }
+
+    calculate_coordinates(&data, positions)
 }
 
 #[cfg(test)]
 mod tests {
-    use super::part_one;
+    use super::{part_one, part_two};
 
     const INPUT: &str = "1
 2
@@ -73,5 +84,10 @@ mod tests {
     #[test]
     fn one() {
         assert_eq!(part_one(INPUT), 3);
+    }
+
+    #[test]
+    fn two() {
+        assert_eq!(part_two(INPUT), 1623178306);
     }
 }
