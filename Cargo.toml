@@ -20,6 +20,7 @@ members = [
   "18-boiling-boudlers/rust",
   "19-not-enough-minerals/rust",
   "20-grove-positioning-system/rust",
+  "21-monkey-math/rust",
   "utils/rust",
   "cli",
 ]
