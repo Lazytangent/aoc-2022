@@ -21,6 +21,7 @@ members = [
   "19-not-enough-minerals/rust",
   "20-grove-positioning-system/rust",
   "21-monkey-math/rust",
+  "22-monkey-map/rust",
   "utils/rust",
   "cli",
 ]
