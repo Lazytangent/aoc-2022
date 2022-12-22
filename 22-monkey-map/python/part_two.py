@@ -242,8 +242,8 @@ def part2(grid, directions):
     # move to start
     x = grid[0].index(TILE)
     state = State(x, 0, '>', grid)
-    state.print(True)
-    print(state)
+    # state.print(True)
+    # print(state)
 
     for cmd in directions:
         if cmd in ('L', 'R'):
@@ -263,13 +263,13 @@ def part2(grid, directions):
                     time.sleep(0.1)
 
 #    state.print(True)
-    state.print()
-    print(state)
+    # state.print()
+    # print(state)
     print(state.password())
 
     # translate back to original coordinates
     state.x -= 50
-    print(state)
+    # print(state)
     print(state.password())
 
 def test(grid):
