@@ -23,6 +23,7 @@ members = [
   "21-monkey-math/rust",
   "22-monkey-map/rust",
   "23-unstable-diffusion/rust",
+  "24-blizzard-basin/rust",
   "utils/rust",
   "cli",
 ]
