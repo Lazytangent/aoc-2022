@@ -135,11 +135,7 @@ fn main() {
     let is_day2 = args.contains(&String::from("-2"));
     let is_real = args.contains(&String::from("-r")) || args.contains(&String::from("--real"));
 
-    let part = if is_day2 {
-        2
-    } else {
-        1
-    };
+    let part = if is_day2 { 2 } else { 1 };
 
     let data = if is_real {
         include_str!("../../../data/full.txt")
