@@ -24,6 +24,7 @@ members = [
   "22-monkey-map/rust",
   "23-unstable-diffusion/rust",
   "24-blizzard-basin/rust",
+  "25-full-of-hot-air/rust",
   "utils/rust",
   "cli",
 ]
