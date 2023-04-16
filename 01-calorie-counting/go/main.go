@@ -10,9 +10,6 @@ import (
 	"lazytangent/aoc/2022/utils"
 )
 
-const TEST_DATA = "../data/small.txt"
-const FULL_DATA = "../data/full.txt"
-
 func main() {
 	input, err := utils.ParseInput(os.Args)
 	if err != nil {
@@ -45,40 +42,4 @@ func main() {
 
 	fmt.Printf("First solution: %d\n", max)
 	fmt.Printf("Second solution: %d\n", max + second + third)
-}
-
-type dataType int
-
-const (
-	small dataType = 0
-	full dataType = 1
-)
-
-func getData(type_ dataType) (string, error) {
-	var filename string
-
-	switch (type_) {
-	case small:
-		filename = TEST_DATA
-	case full:
-		filename = FULL_DATA
-	}
-
-	data, err := os.ReadFile(filename)
-	if err != nil {
-		return "", err
-	}
-
-	return string(data), nil
-}
-
-func parseDataType(args []string) dataType {
-	type_ := small
-	if len(os.Args) >= 2 {
-		if os.Args[1] == "full" {
-			type_ = full
-		}
-	}
-
-	return type_
 }
