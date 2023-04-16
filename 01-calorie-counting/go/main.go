@@ -6,14 +6,15 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
+	"lazytangent/aoc/2022/utils"
 )
 
 const TEST_DATA = "../data/small.txt"
 const FULL_DATA = "../data/full.txt"
 
 func main() {
-	type_ := parseDataType(os.Args)
-	input, err := getData(type_)
+	input, err := utils.ParseInput(os.Args)
 	if err != nil {
 		log.Fatal(err)
 	}
