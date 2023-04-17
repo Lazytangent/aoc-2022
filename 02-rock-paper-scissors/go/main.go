@@ -22,34 +22,34 @@ func main() {
 	for _, round := range strings.Split(input, "\n") {
 		shapes := strings.Split(round, " ")
 
-		switch shapes[0] {
-		case "A":
-			switch shapes[1] {
-			case "X":
+		switch shapes[1] {
+		case "X": // Rock
+			switch shapes[0] {
+			case "A": // Rock
 				score += tie
-			case "Y":
+			case "B": // Paper
 				score += loss
-			case "Z":
+			case "C": // Scissors
 				score += win
 			}
 			score += rock
-		case "B":
-			switch shapes[1] {
-			case "X":
+		case "Y": // Paper
+			switch shapes[0] {
+			case "A": // Rock
 				score += win
-			case "Y":
+			case "B": // Paper
 				score += tie
-			case "Z":
+			case "C": // Scissors
 				score += loss
 			}
 			score += paper
-		case "C":
-			switch shapes[1] {
-			case "X":
+		case "Z": // Scissors
+			switch shapes[0] {
+			case "A": // Rock
 				score += loss
-			case "Y":
+			case "B": // Paper
 				score += win
-			case "Z":
+			case "C": // Scissors
 				score += tie
 			}
 			score += scissors
