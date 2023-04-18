@@ -5,14 +5,10 @@
 char *small_txt = "../data/small.txt";
 char *large_txt = "../data/full.txt";
 
-void debug(int argc, char *argv[]);
-
 int main(int argc, char *argv[]) {
     FILE *fp;
     char *filename;
     char line[100];
-
-    // debug(argc, argv);
 
     if (argc > 1 && strcmp(argv[1], "full") == 0) {
         filename = large_txt;
@@ -29,11 +25,19 @@ int main(int argc, char *argv[]) {
 
     int max = 0;
     int current = 0;
+    int second = 0, third = 0;
     while (fgets(line, 100, fp) != NULL) {
         line[strcspn(line, "\n")] = 0;
         if (strlen(line) == 0) {
             if (current > max) {
+                third = second;
+                second = max;
                 max = current;
+            } else if (current > second) {
+                third = second;
+                second = current;
+            } else if (current > third) {
+                third = current;
             }
 
             current = 0;
@@ -44,17 +48,17 @@ int main(int argc, char *argv[]) {
         current += amount;
     }
 
+    if (current > max) {
+        third = second;
+        second = max;
+        max = current;
+    } else if (current > second) {
+        third = second;
+        second = current;
+    } else if (current > third) {
+        third = current;
+    }
+
     printf("Part One: %d\n", max);
-}
-
-void debug(int argc, char *argv[]) {
-    printf("argc = %d\n", argc);
-
-    for (int i = 0; i < argc; i++) {
-        printf("argv[%d] = %s\n", i, argv[i]);
-    }
-
-    if (argc > 1) {
-        printf("argv[1] == \"full\" = %d\n", argv[1] == "full");
-    }
+    printf("Part Two: %d\n", max + second + third);
 }
