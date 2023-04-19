@@ -14,7 +14,7 @@ small: build
 
 .PHONY: large
 large: build
-	@./target/main large
+	@./target/main full
 
 .PHONY: full
 full: large
