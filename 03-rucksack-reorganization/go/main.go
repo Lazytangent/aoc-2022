@@ -18,8 +18,8 @@ func main() {
 	rucksacks := strings.Split(input, "\n")
 
 	sum := 0
-	outer:
-	for _, rucksack := range rucksacks {
+	partTwo := 0
+	for idx, rucksack := range rucksacks {
 		n := len(rucksack)
 		halfIndex := n / 2
 		firstHalf := rucksack[:halfIndex]
@@ -33,10 +33,26 @@ func main() {
 				} else if c >= int('a') && c <= int('z') {
 					sum += c - int('a') + 1
 				}
-				continue outer
+				break
+			}
+		}
+
+		// Every three indices, check for duplicate across the previous two
+		if (idx + 1) % 3 == 0 {
+			for _, char := range rucksacks[idx] {
+				if strings.ContainsRune(rucksacks[idx - 1], char) && strings.ContainsRune(rucksacks[idx - 2], char) {
+					c := int(char)
+					if c >= int('A') && c <= int('Z') {
+						partTwo += c - int('A') + 27
+					} else if c >= int('a') && c <= int('z') {
+						partTwo += c - int('a') + 1
+					}
+					break
+				}
 			}
 		}
 	}
 
 	fmt.Printf("Part One: %d\n", sum)
+	fmt.Printf("Part Two: %d\n", partTwo)
 }
