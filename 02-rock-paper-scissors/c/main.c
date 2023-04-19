@@ -18,6 +18,10 @@ int against_rock(char me);
 int against_paper(char me);
 int against_scissors(char me);
 int get_point_value(char me);
+int calculate_part_two(char opponent, char me);
+int lose_against(char opponent);
+int tie_against(char opponent);
+int win_against(char opponent);
 
 int main(int argc, char *argv[]) {
     FILE *fp;
@@ -36,6 +40,7 @@ int main(int argc, char *argv[]) {
         exit(-1);
     }
     int score = 0;
+    int part_two = 0;
     while (fgets(line, 5, fp) != NULL) {
         line[strcspn(line, "\n")] = 0;
 
@@ -43,9 +48,11 @@ int main(int argc, char *argv[]) {
         char me = line[2];
 
         score += calculate_round_one(opponent, me);
+        part_two += calculate_part_two(opponent, me);
     }
 
     printf("Part One: %d\n", score);
+    printf("Part Two: %d\n", part_two);
 }
 
 int calculate_round_one(char opponent, char me) {
@@ -108,5 +115,56 @@ int get_point_value(char me) {
             return PAPER;
         case 'Z':
             return SCISSORS;
+    }
+}
+
+int calculate_part_two(char opponent, char me) {
+    int score = 0;
+
+    switch (me) {
+        case 'X':
+            score += lose_against(opponent);
+            break;
+        case 'Y':
+            score += tie_against(opponent);
+            break;
+        case 'Z':
+            score += win_against(opponent);
+            break;
+    }
+
+    return score;
+}
+
+int lose_against(char opponent) {
+    switch (opponent) {
+        case 'A':
+            return LOSS + SCISSORS;
+        case 'B':
+            return LOSS + ROCK;
+        case 'C':
+            return LOSS + PAPER;
+    }
+}
+
+int tie_against(char opponent) {
+    switch (opponent) {
+        case 'A':
+            return TIE + ROCK;
+        case 'B':
+            return TIE + PAPER;
+        case 'C':
+            return TIE + SCISSORS;
+    }
+}
+
+int win_against(char opponent) {
+    switch (opponent) {
+        case 'A':
+            return WIN + PAPER;
+        case 'B':
+            return WIN + SCISSORS;
+        case 'C':
+            return WIN + ROCK;
     }
 }
