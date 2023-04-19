@@ -15,6 +15,14 @@ func main() {
 		log.Fatal(err)
 	}
 	input = strings.TrimSpace(input)
+
+	sum, partTwo := day03(input)
+
+	fmt.Printf("Part One: %d\n", sum)
+	fmt.Printf("Part Two: %d\n", partTwo)
+}
+
+func day03(input string) (int, int) {
 	rucksacks := strings.Split(input, "\n")
 
 	sum := 0
@@ -53,6 +61,5 @@ func main() {
 		}
 	}
 
-	fmt.Printf("Part One: %d\n", sum)
-	fmt.Printf("Part Two: %d\n", partTwo)
+	return sum, partTwo
 }

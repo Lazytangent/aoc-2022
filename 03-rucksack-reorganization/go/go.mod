@@ -1,4 +1,4 @@
-module lazytangent/aoc/01
+module lazytangent/aoc/03
 
 go 1.20
 
