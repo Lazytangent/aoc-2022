@@ -42,8 +42,8 @@ func main() {
 		}
 	}
 
-	// totalDiskSpace := 70_000_000
-	// requiredFreeSpace := 30_000_000
+	var totalDiskSpace int64 = 70_000_000
+	var requiredFreeSpace int64 = 30_000_000
 	var partOne int64 = 0
 
 	for _, v := range dirSizes {
@@ -53,4 +53,17 @@ func main() {
 	}
 
 	fmt.Println("Part One:", partOne)
+
+	currentFreeSpace := totalDiskSpace - dirSizes["/"]
+	requiredChange := requiredFreeSpace - currentFreeSpace
+
+	smallestEligibleDir := "/"
+
+	for k, v := range dirSizes {
+		if v >= requiredChange && v < dirSizes[smallestEligibleDir] {
+			smallestEligibleDir = k
+		}
+	}
+
+	fmt.Println("Part two:", dirSizes[smallestEligibleDir])
 }
