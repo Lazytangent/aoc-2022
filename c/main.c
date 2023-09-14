@@ -20,4 +20,12 @@ int main(int argc, char *argv[]) {
         printf("Error! Could not read data file: %s\n", filename);
         exit(-1);
     }
+
+    char line[7];
+    int max_line_length = 6;
+
+    char *s;
+    while ((s = fgets(line, max_line_length, fp)) != NULL) {
+        printf("%s", line);
+    }
 }
