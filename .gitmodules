@@ -4,3 +4,6 @@
 [submodule "python"]
 	path = python
 	url = git@github.com:Lazytangent/aoc-2022--python.git
+[submodule "go-solutions"]
+	path = go-solutions
+	url = git@github.com:Lazytangent/aoc-2022-go.git
